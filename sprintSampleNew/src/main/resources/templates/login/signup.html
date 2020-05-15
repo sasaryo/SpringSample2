@@ -1,0 +1,97 @@
+<! DOCTYPE html>
+<html xmlns:th ="http://www.thymeleaf.org">
+<head>
+	<meta charset ="UTF-8"></meta>
+	<!-- Bootstrap の 設定 -->
+	<link th:href ="@{/webjars/bootstrap/3.3.7-1/css/bootstrap.min.css}" rel="stylesheet"></link>
+	<script th:src ="@{/webjars/jquery/1.11.1/jquery.min.js}"></script>
+	<script th:src ="@{/webjars/bootstrap/3.3.7-1/js/bootstrap.min.js}"></script>
+	<title> SignUp </title>
+</head>
+<body>
+	<div class ="col-sm-5">
+		<div class ="page-header">
+			<h1> ユーザー 登録 画面 </h1>
+		</div>
+    	<form method ="post" th:action ="@{/signup}" th:object="${signupForm}">
+			<table class ="table table-bordered table-hover">
+			<!-- ユーザー ID の 入力 エリア -->
+				<tr>
+					<th class ="active col-sm-3"> ユーザ ID </th>
+					<td>
+						<!-- ポイント1 : エラー用CSSの追加-->
+						<div class ="form-group" th:classappend="${#fields.hasErrors('userId')} ? 'has-error'">
+							<input type ="text" class ="form-control" th:field="*{userId}" />
+							<span class="text-danger" th:if="${#fields.hasErrors('userId')}" th:errors="*{userId}">userID error</span>
+						</div>
+					</td>
+				</tr>
+				<!-- パスワード の 入力 エリア -->
+				<tr>
+					<th class ="active"> パスワード </th>
+					<td>
+						<div class ="form-group" th:classappend="${#fields.hasErrors('password')} ? 'has-error'">
+							<input type ="text" class ="form-control" th:field="*{password}" />
+							<span class="text-danger" th:if="${#fields.hasErrors('password')}" th:errors="*{password}">password error</span>
+						</div>
+					</td>
+				</tr>
+				<!-- ユーザー 名 の 入力 エリア -->
+				<tr>
+					<th class ="active"> ユーザー 名 </th>
+					<td>
+						<div class ="form-group" th:classappend="${#fields.hasErrors('userName')} ? 'has-error'">
+							<input type ="text" class ="form-control" th:field="*{userName}" />
+							<span class="text-danger" th:if="${#fields.hasErrors('userName')}" th:errors="*{userName}">userName error</span>
+						</div>
+					</td>
+				</tr>
+				<!-- 誕生日 の 入力 エリア -->
+				<tr>
+					<th class ="active"> 誕生日 </th>
+					<td>
+						<div class ="form-group" th:classappend="${#fields.hasErrors('birthday')} ? 'has-error'">
+							<input type ="text" class ="form-control" placeholder ="yyyy/MM/dd" th:field="*{birthday}" />
+							<span class="text-danger" th:if="${#fields.hasErrors('birthday')}" th:errors="*{birthday}">birthday error</span>
+						</div>
+					</td>
+				</tr>
+				<!-- 年齢 の 入力 エリア -->
+				<tr>
+					<th class ="active"> 年齢 </th>
+					<td>
+						<div class ="form-group" th:classappend="${#fields.hasErrors('age')} ? 'has-error'">
+							<input type ="text" class ="form-control" th:field="*{age}" />
+							<span class="text-danger" th:if="${#fields.hasErrors('age')}" th:errors="*{age}">age error</span>
+						</div>
+					</td>
+				</tr>
+				<!-- 結婚 ステータス の 入力 エリア -->
+				<tr>
+					<th class ="active"> 結婚 </th>
+					<td>
+						<div class ="form-group">
+							<!-- ポイント： ラジオ ボタン の 実装 -->
+							<div th:each ="item:${radioMarriage}">
+								<input type ="radio" name ="radioMarrige" th:text ="${item.key}" th:value ="${item.value}" th:field="*{marriage}" ></input>
+								<span class="text-danger" th:if="${#fields.hasErrors('marriage')}" th:errors="*{marriage}">marriage error</span>
+							</div>
+						</div>
+					</td>
+				</tr>
+			</table>
+			<!-- ポイント2 : エラーメッセージの一覧表示 -->
+			<ul>
+				<li th:each="error:${#fields.detailedErrors()}">
+					<span th:text="${error.message}">Error message</span>
+				</li>
+			</ul>
+
+		<!-- ユーザー 登録 ボタン -->
+		<button class ="btn btn-primary" type ="submit">
+		  ユーザー 登録
+		</button>
+		</form>
+	</div>
+</body>
+</html>
