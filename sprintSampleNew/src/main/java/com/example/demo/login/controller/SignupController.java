@@ -9,10 +9,12 @@ import java. util. Map;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import com.example.demo.login.domain.model.GroupOrder;
 import com.example.demo.login.domain.model.SignupForm;
 
 /**
@@ -37,7 +39,7 @@ public class SignupController {
 	// ポイント1 : @ModelAttribute
 	//ユーザー登録画面のGET用コントローラー.
 	@GetMapping("/signup")
-	public String getSignUp(@ModelAttribute SignupForm form, Model model) {
+	public String getSignUp(@ModelAttribute SignupForm form, BindingResult bindingResult, Model model) {
 		//ラジオボタンの初期化メソッド呼び出し
 		radioMarriage = initRadioMarrige();
 		//ラジオボタン用のMapをModelに登録
@@ -49,12 +51,12 @@ public class SignupController {
 	//ユーザー登録画面のPOST用コントローラー.
 	// ポイント2 : データバインドの結果の受け取り
 	@PostMapping("/signup")
-	public String postSignUp(@ModelAttribute SignupForm form, BindingResult bindingResult, Model model) {
+	public String postSignUp(@ModelAttribute @Validated(GroupOrder.class) SignupForm form, BindingResult bindingResult, Model model) {
 		// ポイント3 : データバインド失敗の場合
 		// 入力チェックに引っかかった場合、ユーザ登録画面に戻る
 		if (bindingResult.hasErrors()) {
 			// GETリクエスト用のメソッドを呼び出して、ユーザー登録画面に戻ります。
-			return getSignUp(form, model);
+			return getSignUp(form, bindingResult, model);
 		}
 
 		// formの内容をコンソールに出して確認する
