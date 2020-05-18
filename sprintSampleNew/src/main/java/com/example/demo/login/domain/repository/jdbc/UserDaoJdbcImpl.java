@@ -3,7 +3,10 @@
  */
 package com.example.demo.login.domain.repository.jdbc;
 
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
@@ -17,7 +20,7 @@ import com.example.demo.login.domain.repository.UserDao;
  * @author 佐々木亮
  *
  */
-@Repository
+@Repository("UserDaoJdbcImpl")
 public class UserDaoJdbcImpl implements UserDao {
     @Autowired
     JdbcTemplate jdbc;
@@ -25,7 +28,9 @@ public class UserDaoJdbcImpl implements UserDao {
     // Userテーブルの件数を取得.
     @Override
     public int count() throws DataAccessException {
-        return 0;
+    	// 全件取得してカウント
+    	int count = jdbc.queryForObject("SELECT COUNT(*) FROM m_user", Integer.class);
+        return count;
     }
 
     // Userテーブルにデータを1件insert.
@@ -54,30 +59,96 @@ public class UserDaoJdbcImpl implements UserDao {
     // Userテーブルのデータを１件取得
     @Override
     public User selectOne(String userId) throws DataAccessException {
-        return null;
+
+    	// 1件取得
+    	Map<String, Object> map = jdbc.queryForMap("Select * From m_user"
+    			+ " WHERE user_id = ?" , userId);
+    	// 結果返却用の変数
+    	User user = new User();
+
+    	// 取得したデータを結果返却用の変数にセットしていく
+    	user.setUserId((String)map.get("user_id"));		// ユーザーID
+		user.setPassword((String)map.get("password"));	// パスワード
+		user.setUserName((String)map.get("user_name"));	// ユーザー名
+		user.setBirthday((Date)map.get("birthday"));	// 誕生日
+		user.setAge((Integer)map.get("age"));			// 年齢
+		user.setMarriage((Boolean)map.get("marriage"));	// 結婚ステータス
+		user.setRole((String)map.get("role"));			// ロール
+
+		return user;
     }
 
     // Userテーブルの全データを取得.
     @Override
     public List<User> selectMany() throws DataAccessException {
-        return null;
+
+    	// M_USERテーブルのデータを全件取得
+    	List<Map<String, Object>>getList = jdbc.queryForList("SELECT * FROM m_user");
+
+    	// 結果返却用の変数
+    	List<User>userList = new ArrayList<>();
+
+    	// 取得したデータを結果用のListに格納する
+    	for(Map<String, Object> map: getList) {
+    		// Userインスタンスの作成
+    		User user = new User();
+
+    		// Userインスタンスに取得したデータをセットする
+    		user.setUserId((String)map.get("user_id"));		// ユーザID
+    		user.setPassword((String)map.get("password"));	// パスワード
+    		user.setUserName((String)map.get("user_name"));	// ユーザー名
+    		user.setBirthday((Date)map.get("birthday"));	// 誕生日
+    		user.setAge((Integer)map.get("age"));			// 年齢
+    		user.setMarriage((Boolean)map.get("marriage"));	// 結婚ステータス
+    		user.setRole((String)map.get("role"));			// ロール
+
+    		// 結果返却のListに追加
+    		userList.add(user);
+    	}
+        return userList;
     }
 
     // Userテーブルを１件更新.
     @Override
     public int updateOne(User user) throws DataAccessException {
-        return 0;
+        // 1件更新
+    	int rowNumber = jdbc.update("UPDATE M_USER"
+    			+ " SET"
+    			+ " password = ?,"
+    			+ " user_name = ?,"
+    			+ " birthday = ?,"
+    			+ " age = ?,"
+    			+ " marriage = ?"
+    			+ " WHERE user_id = ?"
+    			, user.getPassword()
+    			, user.getUserName()
+    			, user.getBirthday()
+    			, user.getAge()
+    			, user.isMarriage()
+    			, user.getUserId());
+
+    	return rowNumber;
     }
+
 
     // Userテーブルを１件削除.
     @Override
     public int deleteOne(String userId) throws DataAccessException {
-        return 0;
+    	// 1件削除
+    	int rowNumber = jdbc.update("DELETE FROM m_user WHERE user_id = ?", userId);
+        return rowNumber;
     }
 
     // SQL取得結果をサーバーにCSVで保存する
     @Override
     public void userCsvOut() throws DataAccessException {
+    	// M_USERテーブルのデータを全件取得するSQL
+    	String sql = "SELECT * FROM m_user";
 
+    	// ResultSetExtractorの生成
+    	UserRowCallbackHandler handler = new UserRowCallbackHandler();
+
+    	// SQL実行＆CSV出力
+    	jdbc.query(sql, handler);
     }
 }
