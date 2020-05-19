@@ -195,4 +195,14 @@ public class HomeController {
     	return new ResponseEntity<>(bytes, header, HttpStatus.OK);
     }
 
+    // アドミン権限専用画面のGET用メソッド
+    @GetMapping("/admin")
+    public String getAdmin(Model model) {
+    	// コンテンツ部分にユーザー詳細を表示するための文字列を登録
+    	model.addAttribute("contents", "login/admin::admin_contents");
+
+    	// レイアウト用テンプレート
+    	return "login/homeLayout";
+    }
+
 }
