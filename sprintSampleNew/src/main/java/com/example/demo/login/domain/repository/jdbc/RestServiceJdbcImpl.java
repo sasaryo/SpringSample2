@@ -29,31 +29,50 @@ public class RestServiceJdbcImpl implements RestService {
 	// 1件登録用メソッド
 	@Override
 	public boolean insert(User user) {
-		return false;
+		int result = dao.insertOne(user);
+
+		if(result == 0) {
+			return false;
+		} else {
+			return true;
+		}
 	}
 
 	// 1件検索用メソッド
 	@Override
 	public User selectOne(String userId) {
-		return null;
+		return dao.selectOne(userId);
 	}
 
 	// 全件検索用メソッド
 	@Override
 	public List<User> selectMany() {
-		return null;
+		return dao.selectMany();
 	}
 
 	// 1件更新用メソッド
 	@Override
 	public boolean update(User user) {
-		return false;
+		int result = dao.updateOne(user);
+
+		if(result == 0) {
+			return false;
+		} else {
+			return true;
+		}
 	}
 
 	// 1件削除用メソッド
 	@Override
 	public boolean delete(String userId) {
-		return false;
+
+		int result = dao.deleteOne(userId);
+
+		if (result == 0) {
+			return false;
+		} else {
+			return true;
+		}
 	}
 
 }
