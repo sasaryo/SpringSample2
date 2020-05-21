@@ -14,6 +14,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Repository;
 
+import com.example.demo.login.domain.model.Prefectures;
 import com.example.demo.login.domain.model.User;
 import com.example.demo.login.domain.repository.UserDao;
 
@@ -165,4 +166,9 @@ public class UserDaoJdbcImpl implements UserDao {
     	// SQL実行＆CSV出力
     	jdbc.query(sql, handler);
     }
+
+    // TODO 暫定更新
+	public List<Prefectures> selectPrefectures() {
+		return null;
+	}
 }

@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.example.demo.login.domain.model.Prefectures;
 import com.example.demo.login.domain.model.User;
 import com.example.demo.login.domain.repository.UserDao;
 import com.example.demo.login.domain.service.RestService;
@@ -75,4 +76,9 @@ public class RestServiceJdbcImpl implements RestService {
 		}
 	}
 
+	// 都道府県情報全件取得メソッド
+	@Override
+	public List<Prefectures> selectPrefectures() {
+		return dao.selectPrefectures();
+	}
 }

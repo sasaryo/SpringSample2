@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.example.demo.login.domain.model.Prefectures;
 import com.example.demo.login.domain.model.User;
 import com.example.demo.login.domain.repository.mybatis.UserMapper2;
 import com.example.demo.login.domain.service.RestService;
@@ -52,5 +53,11 @@ public class RestServiceMybatisImpl  implements RestService  {
     public boolean delete(String userId) {
         //delete実行
         return userMapper.deleteOne(userId);
+    }
+
+    @Override
+    public List<Prefectures> selectPrefectures() {
+    	// 都道府県情報全件取得実行
+    	return userMapper.selectPrefectures();
     }
 }

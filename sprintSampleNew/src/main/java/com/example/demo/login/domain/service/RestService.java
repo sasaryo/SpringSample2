@@ -5,6 +5,7 @@ package com.example.demo.login.domain.service;
 
 import java.util.List;
 
+import com.example.demo.login.domain.model.Prefectures;
 import com.example.demo.login.domain.model.User;
 
 /**
@@ -26,4 +27,7 @@ public interface RestService {
 
 	// 1件削除用メソッド
 	public boolean delete(String userId);
+
+	// 都道府県情報全件検索
+	public List<Prefectures> selectPrefectures();
 }
