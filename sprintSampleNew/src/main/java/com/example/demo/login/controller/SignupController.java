@@ -4,11 +4,13 @@
 package com.example.demo.login.controller;
 
 import java.util.LinkedHashMap;
+import java.util.List;
 import java. util. Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -19,6 +21,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import com.example.demo.login.domain.model.GroupOrder;
+import com.example.demo.login.domain.model.Prefectures;
 import com.example.demo.login.domain.model.SignupForm;
 import com.example.demo.login.domain.model.User;
 import com.example.demo.login.domain.service.UserService;
@@ -31,6 +34,9 @@ import com.example.demo.login.domain.service.UserService;
 public class SignupController {
 	@Autowired
 	private UserService userService;
+	@Autowired
+	PasswordEncoder passwordEncoder;
+
 
 	//ポイント 1 : ラジオボタンの実装
 	private Map<String, String>radioMarriage;
@@ -45,14 +51,33 @@ public class SignupController {
 		return radio;
 	}
 
-	// ポイント1 : @ModelAttribute
+	// プルダウンリストの実装
+	private Map<String, String>pulldownPrefecture;
+
+	// プルダウンリストの初期化メソッド
+	private Map<String, String>intPulldownPrefecture() {
+		Map<String, String>pulldown = new LinkedHashMap<>();
+
+		List<Prefectures> prefectures = userService.selectPrefectures();
+
+		// DBから取得した都道府県情報をMapに格納
+		for (int i = 0; i < prefectures.size(); i++) {
+			pulldown.put(prefectures.get(i).getPrefectureId(), prefectures.get(i).getPrefectureName());
+		}
+		return pulldown;
+	}
+
+
 	//ユーザー登録画面のGET用コントローラー.
 	@GetMapping("/signup")
 	public String getSignUp(@ModelAttribute SignupForm form, BindingResult bindingResult, Model model) {
-		//ラジオボタンの初期化メソッド呼び出し
+		//ラジオボタン、プルダウンの初期化メソッド呼び出し
 		radioMarriage = initRadioMarrige();
-		//ラジオボタン用のMapをModelに登録
+		pulldownPrefecture = intPulldownPrefecture();
+
+		//ラジオボタン、プルダウン用のMapをModelに登録
 		model.addAttribute("radioMarriage", radioMarriage);
+		model.addAttribute("pulldownPrefecture", pulldownPrefecture);
 		//signup.htmlに画面遷移
 		return "login/signup";
 	}
@@ -71,16 +96,20 @@ public class SignupController {
 		// formの内容をコンソールに出して確認する
 		System.out.println(form);
 
+		// パスワード暗号化
+		String password = passwordEncoder.encode(form.getPassword());
+
 		// insert用変数
 		User user = new User();
 
-		user.setUserId(form.getUserId());		// ユーザーID
-		user.setPassword(form.getPassword());	// パスワード
-		user.setUserName(form.getUserName());	// ユーザー名
-		user.setBirthday(form.getBirthday());	// 誕生日
-		user.setAge(form.getAge());				// 年齢
-		user.setMarriage(form.isMarriage());	// 結婚ステータス
-		user.setRole("ROLE_GENERAL");			// ロール(一般)
+		user.setUserId(form.getUserId());					// ユーザーID
+		user.setPassword(password);							// パスワード(暗号化)
+		user.setUserName(form.getUserName());				// ユーザー名
+		user.setBirthday(form.getBirthday());				// 誕生日
+		user.setAge(form.getAge());							// 年齢
+		user.setMarriage(form.isMarriage());				// 結婚ステータス
+		user.setPrefectureName(form.getPrefectureName());	// 都道府県
+		user.setRole("ROLE_GENERAL");						// ロール(一般)
 
 		// ユーザー登録処理
 		boolean result = userService.insert(user);

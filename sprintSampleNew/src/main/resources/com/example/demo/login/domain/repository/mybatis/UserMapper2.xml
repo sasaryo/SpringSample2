@@ -43,7 +43,7 @@
     </insert>
 
     <!-- １件検索 -->
-    <select id="selectOne" parameterType="string" resultType="com.example.demo.login.domain.model.User">
+    <select id="selectOne" parameterType="string" resultMap="user">
         SELECT
             user_id,
             password,
@@ -70,6 +70,13 @@
             marriage,
             prefecture_name,
             role
+        FROM
+            m_user
+    </select>
+
+    <select id="selectCount" resultType="int">
+        SELECT
+            count(user_id)
         FROM
             m_user
     </select>

@@ -26,6 +26,9 @@ public interface UserMapper2 {
 	// 全件検索用メソッド
 	public List<User> selectMany();
 
+	// 件数カウント用メソッド
+	public int selectCount();
+
 	// 1件更新用メソッド
 	public boolean updateOne(User user);
 

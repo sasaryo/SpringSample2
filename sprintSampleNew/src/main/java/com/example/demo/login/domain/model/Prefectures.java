@@ -11,6 +11,6 @@ import lombok.Data;
  */
 @Data
 public class Prefectures {
-	private int prefectureId;		// 都道府県ID
+	private String prefectureId;		// 都道府県ID
 	private String prefectureName;	// 都道府県名
 }

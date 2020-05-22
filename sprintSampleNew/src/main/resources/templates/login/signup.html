@@ -79,6 +79,20 @@
 						</div>
 					</td>
 				</tr>
+				<!-- 都道府県 の 入力 エリア -->
+				<tr>
+					<th class ="active"> お住いの都道府県 </th>
+					<td>
+						<div class ="form-group" th:classappend="${#fields.hasErrors('prefectureName')} ? 'has-error'">
+							<!-- プルダウン の 実装 -->
+								<select class="form-control" id="prefectureName" name="prefectureName">
+									<option value="">---</option>
+									<option th:each="item:${pulldownPrefecture}" th:value="${item.value}" th:text="${item.value}" th:selected="${item.value} == *{prefectureName}">都道府県</option>
+								</select>
+								<span class="text-danger" th:if="${#fields.hasErrors('prefectureName')}" th:errors="*{prefectureName}">prefecture error</span>
+						</div>
+					</td>
+				</tr>
 			</table>
 			<!-- ポイント2 : エラーメッセージの一覧表示 -->
 			<ul>
