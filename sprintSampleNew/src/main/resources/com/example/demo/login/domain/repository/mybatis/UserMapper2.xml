@@ -12,7 +12,12 @@
         <result column="birthday" property="birthday" />
         <result column="age" property="age" />
         <result column="marriage" property="marriage" />
+        <result column="prefecture_name" property="prefectureName" />
         <result column="role" property="role" />
+    </resultMap>
+    <resultMap type="com.example.demo.login.domain.model.Prefectures" id="prefectures">
+    	<id column="prefecture_id" property="prefectureId" />
+    	<result column="prefecture_name" property="prefectureName" />
     </resultMap>
 
     <!-- １件insert -->
@@ -24,6 +29,7 @@
             birthday,
             age,
             marriage,
+            prefecture_name,
             role)
         VALUES (
             #{userId},
@@ -32,11 +38,12 @@
             #{birthday},
             #{age},
             #{marriage},
+            #{prefectureName},
             #{role})
     </insert>
 
     <!-- １件検索 -->
-    <select id="selectOne" parameterType="string" resultType="com.example.demo.login.domain.model.User">
+    <select id="selectOne" parameterType="string" resultMap="user">
         SELECT
             user_id,
             password,
@@ -44,6 +51,7 @@
             birthday,
             age,
             marriage,
+            prefecture_name,
             role
         FROM
             m_user
@@ -60,7 +68,15 @@
             birthday,
             age,
             marriage,
+            prefecture_name,
             role
+        FROM
+            m_user
+    </select>
+
+    <select id="selectCount" resultType="int">
+        SELECT
+            count(user_id)
         FROM
             m_user
     </select>
@@ -73,7 +89,8 @@
             user_name = #{userName},
             birthday = #{birthday},
             age = #{age},
-            marriage = #{marriage}
+            marriage = #{marriage},
+            prefecture_name = #{prefectureName}
         WHERE user_id = #{userId}
     </update>
 
@@ -81,4 +98,11 @@
     <delete id="deleteOne" parameterType="string">
         DELETE FROM m_user WHERE user_id = #{userId}
     </delete>
+
+    <!-- 都道府県全件検索 -->
+    <select id="selectPrefectures" resultMap="prefectures">
+        SELECT *
+        FROM
+            prefectures
+    </select>
 </mapper>

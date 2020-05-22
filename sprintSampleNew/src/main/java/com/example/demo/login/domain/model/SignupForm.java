@@ -42,4 +42,6 @@ public class SignupForm {
 	private int age;			// 年齢
 	@AssertFalse(groups = ValidGroup2.class)
 	private boolean marriage;	// 結婚 ステータス
+	@NotBlank(groups = ValidGroup1.class)
+	private String prefectureName; // 都道府県名
 }

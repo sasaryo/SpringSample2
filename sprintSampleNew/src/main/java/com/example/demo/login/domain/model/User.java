@@ -19,5 +19,6 @@ public class User {
     private Date birthday; //誕生日
     private int age; //年齢
     private boolean marriage; //結婚ステータス
+    private String prefectureName; // 都道府県名
     private String role; //ロール
 }

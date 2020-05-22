@@ -1,2 +1,3 @@
-oono@sample.com,,大野智,1980-11-26,39,false,ROLE_GENERAL
-sasaki@xxx.co.jp,password,佐々木亮,1978-09-03,41,false,ROLE_ADMIN
+nino@xxx.co.jp,$2a$10$0LhsWqZwFuknxeOaRMJkv.cBUzHWa5AH24qPB8CqYRmq.smxmq4Pe,二宮,Fri Jun 17 00:00:00 GMT+09:00 1983,36,false,東京都,ROLE_GENERAL
+oono@sample.com,$2a$10$xRTXvpMWly0oGiu65WZlm.3YL95LGVV2ASFjDhe6WF4.Qji1huIPa,大野智,Wed Nov 26 00:00:00 GMT+09:00 1980,39,false,東京都,ROLE_GENERAL
+sasaki@xxx.co.jp,$2a$10$xRTXvpMWly0oGiu65WZlm.3YL95LGVV2ASFjDhe6WF4.Qji1huIPa,佐々木亮,Sun Sep 03 00:00:00 GMT+09:00 1978,41,false,埼玉県,ROLE_ADMIN

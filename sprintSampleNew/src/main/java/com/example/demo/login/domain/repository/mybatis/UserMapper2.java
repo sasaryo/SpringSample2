@@ -7,6 +7,7 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
 
+import com.example.demo.login.domain.model.Prefectures;
 import com.example.demo.login.domain.model.User;
 
 /**
@@ -25,9 +26,15 @@ public interface UserMapper2 {
 	// 全件検索用メソッド
 	public List<User> selectMany();
 
+	// 件数カウント用メソッド
+	public int selectCount();
+
 	// 1件更新用メソッド
 	public boolean updateOne(User user);
 
 	// 1件削除用メソッド
 	public boolean deleteOne(String userId);
+
+	// 都道府県情報全件取得
+	public List<Prefectures> selectPrefectures();
 }

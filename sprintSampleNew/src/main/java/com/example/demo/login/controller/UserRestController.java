@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.demo.login.domain.model.Prefectures;
 import com.example.demo.login.domain.model.User;
 import com.example.demo.login.domain.service.RestService;
 
@@ -92,5 +93,11 @@ public class UserRestController {
 
 		// 結果用の文字列リターン
 		return str;
+	}
+
+	@GetMapping("/rest/getPrefectures")
+	public List<Prefectures> selectGetPrefectures() {
+		// 都道府県全件取得を実施
+		return service.selectPrefectures();
 	}
 }

@@ -7,6 +7,7 @@ import java.util.List;
 
 import org.springframework.dao.DataAccessException;
 
+import com.example.demo.login.domain.model.Prefectures;
 import com.example.demo.login.domain.model.User;
 
 /**
@@ -34,4 +35,7 @@ public interface UserDao {
 
     //SQL取得結果をサーバーにCSVで保存する
     public void userCsvOut() throws DataAccessException;
+
+    // 都道府県テーブル全件検索
+    public List<Prefectures> selectPrefectures() throws DataAccessException;
 }

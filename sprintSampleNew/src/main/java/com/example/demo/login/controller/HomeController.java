@@ -13,6 +13,7 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import com.example.demo.login.domain.model.Prefectures;
 import com.example.demo.login.domain.model.SignupForm;
 import com.example.demo.login.domain.model.User;
 import com.example.demo.login.domain.service.UserService;
@@ -32,6 +34,8 @@ import com.example.demo.login.domain.service.UserService;
 public class HomeController {
     @Autowired
     UserService userService;
+    @Autowired
+    PasswordEncoder passwordEncoder;
 
     // 結婚ステータスのラジオボタン用変数
     private Map<String, String>radioMarriage;
@@ -46,6 +50,22 @@ public class HomeController {
 
     	return radio;
     }
+
+	// プルダウンリストの実装
+	private Map<String, String>pulldownPrefecture;
+
+	// プルダウンリストの初期化メソッド
+	private Map<String, String>intPulldownPrefecture() {
+		Map<String, String>pulldown = new LinkedHashMap<>();
+
+		List<Prefectures> prefectures = userService.selectPrefectures();
+
+		// DBから取得した都道府県情報をMapに格納
+		for (int i = 0; i < prefectures.size(); i++) {
+			pulldown.put(prefectures.get(i).getPrefectureId(), prefectures.get(i).getPrefectureName());
+		}
+		return pulldown;
+	}
 
     //ユーザー一覧画面のGET用メソッド.
     @GetMapping("/home")
@@ -85,11 +105,13 @@ public class HomeController {
     	// コンテンツ部分にユーザー詳細を表示するための文字列を登録
     	model.addAttribute("contents", "login/userDetail::userDetail_contents");
 
-    	// 結婚ステータス用ラジオボタンの初期化
+    	//ラジオボタン、プルダウンの初期化メソッド呼び出し
     	radioMarriage = initRadioMarriage();
+    	pulldownPrefecture = intPulldownPrefecture();
 
-    	// ラジオボタン用のMapをModelに登録
+    	// ラジオボタン、プルダウン用のMapをModelに登録
     	model.addAttribute("radioMarriage", radioMarriage);
+    	model.addAttribute("pulldownPrefecture", pulldownPrefecture);
 
     	// ユーザーIDのチェック
     	if (userId != null && userId.length() > 0) {
@@ -97,11 +119,12 @@ public class HomeController {
     		User user = userService.selectOne(userId);
 
     		// Userクラスをフォームクラスに変換
-    		form.setUserId(user.getUserId());		// ユーザーID
-    		form.setUserName(user.getUserName());	// ユーザー名
-    		form.setBirthday(user.getBirthday());	// 誕生日
-    		form.setAge(user.getAge());				// 年齢
-    		form.setMarriage(user.isMarriage());	// 結婚ステータス
+    		form.setUserId(user.getUserId());					// ユーザーID
+    		form.setUserName(user.getUserName());				// ユーザー名
+    		form.setBirthday(user.getBirthday());				// 誕生日
+    		form.setAge(user.getAge());							// 年齢
+    		form.setMarriage(user.isMarriage());				// 結婚ステータス
+    		form.setPrefectureName(user.getPrefectureName());	// 都道府県
 
     		// Modelに登録
     		model.addAttribute("signupForm", form);
@@ -116,16 +139,20 @@ public class HomeController {
 
     	System.out.println("更新ボタンの処理");
 
+    	// パスワード暗号化
+		String password = passwordEncoder.encode(form.getPassword());
+
     	// Userインスタンスの生成
     	User user = new User();
 
     	// フォームクラスをUserクラスに変換
     	user.setUserId(form.getUserId());
-    	user.setPassword(form.getPassword());
+    	user.setPassword(password);
     	user.setUserName(form.getUserName());
     	user.setBirthday(form.getBirthday());
     	user.setAge(form.getAge());
     	user.setMarriage(form.isMarriage());
+    	user.setPrefectureName(form.getPrefectureName());
 
     	try {
     		// 更新実行
@@ -174,12 +201,14 @@ public class HomeController {
     // ユーザー一覧のCSV出力用メソッド
     @GetMapping("/userList/csv")
     public ResponseEntity<byte[]> getUserListCsv(Model model) {
-    	// ユーザーを全件取得して、CSVをサーバーに保存する
-    	userService.userCsvOut();
+
 
     	byte[] bytes = null;
 
     	try {
+        	// ユーザーを全件取得して、CSVをサーバーに保存する
+        	userService.userCsvOut();
+
     		// サーバーに保存されているsample.csvファイルをbyteで取得する
     		bytes = userService.getFile("sample.csv");
     	} catch (IOException e) {
