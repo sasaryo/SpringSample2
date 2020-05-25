@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import com.example.demo.login.domain.model.Prefectures;
 import com.example.demo.login.domain.model.SignupForm;
 import com.example.demo.login.domain.model.User;
+import com.example.demo.login.domain.service.RestServiceMail;
 import com.example.demo.login.domain.service.UserService;
 
 /**
@@ -36,6 +37,8 @@ public class HomeController {
     UserService userService;
     @Autowired
     PasswordEncoder passwordEncoder;
+    @Autowired
+    RestServiceMail restServiceMail;
 
     // 結婚ステータスのラジオボタン用変数
     private Map<String, String>radioMarriage;
@@ -94,6 +97,26 @@ public class HomeController {
     	model.addAttribute("userListCount", count);
 
     	return "login/homeLayout";
+    }
+
+    // ユーザー一覧画面のPostメソッド
+    @GetMapping("/userList/{id:.+}")
+    public String postUserListMailSend(Model model, @PathVariable("id")String userId) {
+    	// ユーザーID確認(デバッグ)
+    	System.out.println("userId = " + userId);
+
+    	// メール送信実施
+    	boolean result = restServiceMail.sendMail(userId);
+
+    	if(result == true) {
+    		model.addAttribute("result", "メール送信成功");
+    	}
+    	else {
+    		model.addAttribute("result", "メール送信失敗");
+    	}
+
+    	// ユーザー一覧画面を表示
+    	return getUserList(model);
     }
 
     // ユーザー詳細画面のGET用メソッド

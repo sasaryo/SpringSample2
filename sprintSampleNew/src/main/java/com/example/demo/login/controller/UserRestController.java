@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.demo.login.domain.model.Prefectures;
 import com.example.demo.login.domain.model.User;
 import com.example.demo.login.domain.service.RestService;
+import com.example.demo.login.domain.service.RestServiceMail;
 
 /**
  * @author 佐々木亮
@@ -29,6 +30,9 @@ public class UserRestController {
 	@Autowired
 	@Qualifier("RestServiceMybatisImpl")
 	RestService service;
+
+	@Autowired
+	RestServiceMail serviceMail;
 
 	// ユーザー全件取得
 	@GetMapping("/rest/get")
@@ -99,5 +103,22 @@ public class UserRestController {
 	public List<Prefectures> selectGetPrefectures() {
 		// 都道府県全件取得を実施
 		return service.selectPrefectures();
+	}
+
+	@PostMapping("/rest/sendMail/{id:.+}")
+	public String sendMailOne(@PathVariable("id") String userId) {
+		// 1宛先にメール送信実施
+		boolean result = serviceMail.sendMail(userId);
+
+		String str;
+
+		if (result == true) {
+			str = "{\"result\":\"ok\"}";
+		} else {
+			str = "{\"result\":\"error\"}";
+		}
+
+		// 結果用の文字列をリターン
+		return str;
 	}
 }
