@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.util.List;
 
 import com.example.demo.login.domain.model.Prefectures;
+import com.example.demo.login.domain.model.PurchaseHistory;
 import com.example.demo.login.domain.model.User;
 
 /**
@@ -40,4 +41,13 @@ public interface UserService {
 
 	// 都道府県情報全件検索
 	public List<Prefectures> selectPrefectures();
+
+	// 購入履歴検索用メソッド
+	public List<PurchaseHistory> selectPurchaseHistory(String userId);
+
+	// 購入履歴登録用メソッド
+	public boolean insertPurchaseHistory(PurchaseHistory purchaseHistory);
+
+	// 購入履歴金額合計
+	public int selectSumPurchaseHistoryPrice(String userId);
 }

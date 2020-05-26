@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import com.example.demo.login.domain.model.Prefectures;
+import com.example.demo.login.domain.model.PurchaseHistory;
 import com.example.demo.login.domain.model.SignupForm;
 import com.example.demo.login.domain.model.User;
 import com.example.demo.login.domain.service.RestServiceMail;
@@ -257,4 +258,47 @@ public class HomeController {
     	return "login/homeLayout";
     }
 
+    // 購入履歴画面のGET用メソッド
+    @GetMapping("/userPurchaseHistory/{id:.+}")
+    public String getUserPurchaseHistory(Model model, @PathVariable("id")String userId) {
+    	// ユーザーID確認（デバッグ）
+    	System.out.println("userId = " + userId);
+
+    	// コンテンツ部分に購入履歴を表示するための文字列を登録
+    	model.addAttribute("contents", "login/userPurchaseHistory::userPurchaseHistory_contents");
+
+    	// ModelにユーザーIDを登録
+    	model.addAttribute("userId", userId);
+
+    	// ユーザーIDのチェック
+    	if (userId != null && userId.length() > 0) {
+    		// ユーザー情報を取得
+    		List<PurchaseHistory> purchaseHistoryList = userService.selectPurchaseHistory(userId);
+
+    		// Modelに購入履歴を登録
+    		model.addAttribute("purchaseHistoryList", purchaseHistoryList);
+
+    		// 購入金額合計を算出
+    		int sumPrice = userService.selectSumPurchaseHistoryPrice(userId);
+
+    		// Modelに購入金額登録
+    		model.addAttribute("sumPrice", sumPrice);
+    	}
+    	return "login/homeLayout";
+    }
+
+    // 購入履歴入力画面のGETメソッド
+    @GetMapping("/userPurchaseInput/{id:.+}")
+    public String getUserPurchaseInput(Model model, @PathVariable("id")String userId) {
+    	// ユーザーID確認（デバッグ）
+    	System.out.println("userId = " + userId);
+
+    	// コンテンツ部分に購入履歴を表示するための文字列を登録
+    	model.addAttribute("contents", "login/userPurchaseInput::userPurchaseInput_contents");
+
+    	// ModelにユーザーIDを登録
+    	model.addAttribute("userId", userId);
+
+    	return "login/homeLayout";
+    }
 }

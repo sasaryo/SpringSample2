@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.example.demo.login.domain.model.Prefectures;
+import com.example.demo.login.domain.model.PurchaseHistory;
 import com.example.demo.login.domain.model.User;
 import com.example.demo.login.domain.repository.mybatis.UserMapper2;
 import com.example.demo.login.domain.service.UserService;
@@ -127,4 +128,21 @@ public class UserServiceMybatisImpl implements UserService {
     	return userMapper.selectPrefectures();
     }
 
+    @Override
+	// 購入履歴検索用メソッド
+	public List<PurchaseHistory> selectPurchaseHistory(String userId) {
+    	return userMapper.selectPurchaseHistory(userId);
+    }
+
+    @Override
+	// 購入履歴登録用メソッド
+	public boolean insertPurchaseHistory(PurchaseHistory purchaseHistory) {
+    	return userMapper.insertPurchaseHistory(purchaseHistory);
+    }
+
+    @Override
+	// 購入履歴金額合計
+	public int selectSumPurchaseHistoryPrice(String userId) {
+    	return userMapper.selectSumPurchaseHistoryPrice(userId);
+    }
 }

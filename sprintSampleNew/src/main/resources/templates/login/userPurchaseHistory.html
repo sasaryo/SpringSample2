@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+    <meta charset="UTF-8"></meta>
+</head>
+<body>
+    <!-- コンテンツ部分 -->
+    <div th:fragment="userPurchaseHistory_contents">
+        <div class="page-header">
+            <h1>購入履歴 (ユーザID:[[${userId}]])</h1>
+        </div>
+        <table class="table table-bordered table-hover table-striped">
+            <tr>
+                <th class="info col-sm-2">購入日</th>
+                <th class="info col-sm-2">購入品目</th>
+                <th class="info col-sm-2">購入金額(円)</th>
+            </tr>
+            <tr th:each="purchaseHistory : ${purchaseHistoryList}">
+                <td th:text="${#dates.format(purchaseHistory.purchaseDate, 'YYYY/MM/dd')}"></td>
+                <td th:text="${purchaseHistory.purchaseItem}"></td>
+                <td th:text="${#numbers.formatInteger(purchaseHistory.purchasePrice, 1, 'COMMA')}"></td>
+            </tr>
+        </table>
+        <!-- ユーザー一覧の件数 -->
+        <label th:text=" '合計金額：' + ${#numbers.formatInteger(sumPrice, 1, 'COMMA')} + '円' "></label><br/>
+		<!-- ユーザー詳細画面へのリンク -->
+		<a class="btn btn-primary" th:href="@{'/userPurchaseInput/' + ${userId}}">
+			購入履歴入力
+		</a>
+    </div>
+</body>
+</html>
