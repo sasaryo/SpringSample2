@@ -50,4 +50,10 @@ public interface UserService {
 
 	// 購入履歴金額合計
 	public int selectSumPurchaseHistoryPrice(String userId);
+
+	// 購入履歴更新用メソッド
+	public boolean updatePurchaseHistory(PurchaseHistory purchaseHistory);
+
+	// 購入履歴削除用メソッド
+	public boolean deletePurchaseHistory(int id);
 }

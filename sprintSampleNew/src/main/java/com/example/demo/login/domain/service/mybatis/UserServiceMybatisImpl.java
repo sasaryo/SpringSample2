@@ -145,4 +145,16 @@ public class UserServiceMybatisImpl implements UserService {
 	public int selectSumPurchaseHistoryPrice(String userId) {
     	return userMapper.selectSumPurchaseHistoryPrice(userId);
     }
+
+    @Override
+    // 購入履歴更新用メソッド
+    public boolean updatePurchaseHistory(PurchaseHistory purchaseHistory) {
+    	return userMapper.updatePurchaseHistory(purchaseHistory);
+    }
+
+    @Override
+    // 購入履歴削除用メソッド
+    public boolean deletePurchaseHistory(int id) {
+    	return userMapper.deletePurchaseHistory(id);
+    }
 }

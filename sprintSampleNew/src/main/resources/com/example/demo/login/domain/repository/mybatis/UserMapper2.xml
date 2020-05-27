@@ -143,4 +143,20 @@
             purchase_history
         WHERE user_id = #{userId}
     </select>
+
+    <!-- 購入履歴更新 -->
+    <update id="updatePurchaseHistory" parameterType="com.example.demo.login.domain.model.PurchaseHistory">
+        UPDATE purchase_history
+        SET
+            purchase_date = #{purchaseDate},
+            purchase_item = #{purchaseItem},
+            purchase_price = #{purchasePrice}
+		WHERE
+			id = #{id}
+    </update>
+
+        <!-- １件削除 -->
+    <delete id="deletePurchaseHistory" parameterType="int">
+        DELETE FROM purchase_history WHERE id = #{id}
+    </delete>
 </mapper>

@@ -15,11 +15,63 @@
                 <th class="info col-sm-2">購入日</th>
                 <th class="info col-sm-2">購入品目</th>
                 <th class="info col-sm-2">購入金額(円)</th>
+                <th class="info col-sm-2"></th>
+                <th class="info col-sm-2"></th>
             </tr>
             <tr th:each="purchaseHistory : ${purchaseHistoryList}">
-                <td th:text="${#dates.format(purchaseHistory.purchaseDate, 'YYYY/MM/dd')}"></td>
-                <td th:text="${purchaseHistory.purchaseItem}"></td>
-                <td th:text="${#numbers.formatInteger(purchaseHistory.purchasePrice, 1, 'COMMA')}"></td>
+            	<form method="post" th:action="@{/userPurchaseHistory/__*{purchaseHistory.id}__}" th:object="${purchaseHistory}">
+					<td class="col-sm-3">
+						<div class="form-group"
+							th:classappend="${#fields.hasErrors('purchaseHistory.purchaseDate')} ? 'has-error'">
+							<input type="text" class="form-control"
+								placeholder="yyyy/MM/dd"
+								th:field="*{purchaseHistory.purchaseDate}" />
+								<span class="text-danger"
+									th:if="${#fields.hasErrors('purchaseHistory.purchaseDate')}"
+									th:errors="*{purchaseHistory.purchaseDate}">
+									purchaseDate error
+								</span>
+						</div>
+                	</td>
+					<td class="col-sm-3">
+						<div class="form-group"
+							th:classappend="${#fields.hasErrors('purchaseHistory.purchaseItem')} ? 'has-error'">
+							<input type="text" class="form-control"
+								th:field="*{purchaseHistory.purchaseItem}" />
+								<span class="text-danger"
+									th:if="${#fields.hasErrors('purchaseHistory.purchaseItem')}"
+									th:errors="*{purchaseHistory.purchaseItem}">
+									purchaseItem error
+								</span>
+						</div>
+                	</td>
+					<td class="col-sm-3">
+						<div class="form-group"
+							th:classappend="${#fields.hasErrors('purchaseHistory.purchasePrice')} ? 'has-error'">
+							<input type="text" class="form-control"
+								th:field="*{purchaseHistory.purchasePrice}" />
+								<span class="text-danger"
+									th:if="${#fields.hasErrors('purchaseHistory.purchasePrice')}"
+									th:errors="*{purchaseHistory.purchasePrice}">
+									purchasePrice error
+								</span>
+						</div>
+                	</td>
+                    <!-- 更新ボタン -->
+					<td class="col-sm-3">
+						<button class="btn btn-primary btn-lg pull-right"
+							type="submit"
+							name="update">
+							更新
+						</button>
+					</td>
+					<td class="col-sm-3">
+                    <!-- 削除ボタン -->
+                    	<button class="btn btn-danger btn-lg" type="submit" name="delete">
+                        	削除
+                    	</button>
+                	</td>
+                </form>
             </tr>
         </table>
         <!-- ユーザー一覧の件数 -->
