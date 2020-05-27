@@ -9,9 +9,11 @@
         <div class="row">
             <div class="col-sm-5">
                 <div class="page-header">
-                    <h1>購入履歴入力  (ユーザID:[[${userId}]])</h1>
+                	<nobr>
+                    	<h1>購入履歴入力  (ユーザID:[[${userId}]])</h1>
+                	</nobr>
                 </div>
-                <form method="post" th:action="@{/userPurchaseInput}" th:object="${PurchaseHistoryForm}">
+                <form method="post" th:action="@{/userPurchaseInput/__${userId}__}" th:object="${purchaseHistoryForm}">
                     <table class="table table-bordered table-hover">
                         <tr>
                             <!-- 購入日 -->
@@ -23,7 +25,7 @@
                                         placeholder="yyyy/MM/dd"
                                         th:field="*{purchaseDate}" />
                                     <span class="text-danger"
-                                        th:if="${#fields.hasErrors('birthday')}"
+                                        th:if="${#fields.hasErrors('purchaseDate')}"
                                         th:errors="*{purchaseDate}">
                                         purchaseDate error
                                     </span>
