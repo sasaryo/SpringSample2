@@ -20,6 +20,7 @@
                 <th class="info col-sm-2">都道府県</th>
                 <th class="info col-sm-2"></th>
                 <th class="info col-sm-2"></th>
+                <th class="info col-sm-2"></th>
             </tr>
             <tr th:each="user : ${userList}">
                 <td th:text="${user.userId}"></td>
@@ -32,6 +33,12 @@
                     <!-- ユーザー詳細画面へのリンク -->
                     <a class="btn btn-primary" th:href="@{'/userDetail/' + ${user.userId}}">
                         詳細
+                    </a>
+                </td>
+                <td>
+                    <!-- 購入履歴画面へのリンク -->
+                    <a class="btn btn-primary" th:href="@{'/userPurchaseHistory/' + ${user.userId}}">
+                        購入履歴
                     </a>
                 </td>
                 <td>

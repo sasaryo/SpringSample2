@@ -16,12 +16,17 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import com.example.demo.login.domain.model.GroupOrder;
 import com.example.demo.login.domain.model.Prefectures;
+import com.example.demo.login.domain.model.PurchaseHistory;
+import com.example.demo.login.domain.model.PurchaseHistoryForm;
 import com.example.demo.login.domain.model.SignupForm;
 import com.example.demo.login.domain.model.User;
 import com.example.demo.login.domain.service.RestServiceMail;
@@ -257,4 +262,85 @@ public class HomeController {
     	return "login/homeLayout";
     }
 
+    // 購入履歴画面のGET用メソッド
+    @GetMapping("/userPurchaseHistory/{id:.+}")
+    public String getUserPurchaseHistory(Model model, @PathVariable("id")String userId) {
+    	// ユーザーID確認（デバッグ）
+    	System.out.println("userId = " + userId);
+
+    	// コンテンツ部分に購入履歴を表示するための文字列を登録
+    	model.addAttribute("contents", "login/userPurchaseHistory::userPurchaseHistory_contents");
+
+    	// ModelにユーザーIDを登録
+    	model.addAttribute("userId", userId);
+
+    	// ユーザーIDのチェック
+    	if (userId != null && userId.length() > 0) {
+    		// ユーザー情報を取得
+    		List<PurchaseHistory> purchaseHistoryList = userService.selectPurchaseHistory(userId);
+
+    		// Modelに購入履歴を登録
+    		model.addAttribute("purchaseHistoryList", purchaseHistoryList);
+
+    		// 購入金額合計を算出
+    		int sumPrice = userService.selectSumPurchaseHistoryPrice(userId);
+
+    		// Modelに購入金額登録
+    		model.addAttribute("sumPrice", sumPrice);
+    	}
+    	return "login/homeLayout";
+    }
+
+    // 購入履歴入力画面のGETメソッド
+    @GetMapping("/userPurchaseInput/{id:.+}")
+    public String getUserPurchaseInput(@ModelAttribute PurchaseHistoryForm purchaseHistoryForm, BindingResult bindingResult, Model model, @PathVariable("id")String userId) {
+    	// ユーザーID確認（デバッグ）
+    	System.out.println("userId = " + userId);
+
+    	// コンテンツ部分に購入履歴を表示するための文字列を登録
+    	model.addAttribute("contents", "login/userPurchaseInput::userPurchaseInput_contents");
+
+    	// ModelにユーザーIDを登録
+    	model.addAttribute("userId", userId);
+
+    	return "login/homeLayout";
+    }
+
+    // 購入履歴入力画面のPostメソッド
+    @PostMapping("/userPurchaseInput/{id:.+}")
+    public String postUserPurchaseInput(@ModelAttribute @Validated(GroupOrder.class) PurchaseHistoryForm purchaseHistoryForm, BindingResult bindingResult, Model model, @PathVariable("id")String userId) {
+    	// ユーザーID確認（デバッグ）
+    	System.out.println("userId = " + userId);
+
+		// 入力チェックに引っかかった場合、ユーザ登録画面に戻る
+		if (bindingResult.hasErrors()) {
+			// GETリクエスト用のメソッドを呼び出して、ユーザー登録画面に戻ります。
+			return getUserPurchaseInput(purchaseHistoryForm, bindingResult, model, userId);
+		}
+
+		// purchaseHistoryFormの内容をコンソールに出して確認する
+		System.out.println(purchaseHistoryForm);
+
+		// insert用変数
+		PurchaseHistory purchaseHistory = new PurchaseHistory();
+
+		purchaseHistory.setUserId(userId);											// ユーザーID
+		purchaseHistory.setPurchaseDate(purchaseHistoryForm.getPurchaseDate());		// 購入日
+		purchaseHistory.setPurchaseItem(purchaseHistoryForm.getPurchaseItem());		// 購入品目
+		purchaseHistory.setPurchasePrice(purchaseHistoryForm.getPurchasePrice());	// 購入金額
+
+		// 購入履歴登録処理
+		boolean result = userService.insertPurchaseHistory(purchaseHistory);
+
+		// 購入履歴登録の判定
+		if (result == true) {
+			System.out.println("insert成功");
+		}
+		else {
+			System.out.println("insert失敗");
+		}
+
+    	// ユーザー一覧画面を表示
+    	return getUserPurchaseHistory(model, userId);
+    }
 }
