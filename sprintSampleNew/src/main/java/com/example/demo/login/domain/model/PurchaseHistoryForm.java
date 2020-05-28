@@ -20,6 +20,7 @@ import lombok.Data;
  */
 @Data
 public class PurchaseHistoryForm {
+	private int id;				// ID
 	@NotNull(groups = ValidGroup1.class)
 	@DateTimeFormat( pattern = "yyyy/MM/dd")
 	private Date purchaseDate;		// 購入日時

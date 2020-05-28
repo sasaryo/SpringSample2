@@ -13,6 +13,7 @@ import lombok.Data;
  */
 @Data
 public class PurchaseHistory {
+	private int id;				// ID
 	private String userId;			// ユーザID
 	private Date purchaseDate;		// 購入日時
 	private String purchaseItem;	// 購入品目

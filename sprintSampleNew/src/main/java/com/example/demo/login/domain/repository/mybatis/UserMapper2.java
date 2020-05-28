@@ -47,4 +47,13 @@ public interface UserMapper2 {
 
 	// 購入履歴金額合計
 	public int selectSumPurchaseHistoryPrice(String userId);
+
+	// 購入履歴1件検索用メソッド
+	public PurchaseHistory selectOnePurchaseHistory(int id);
+
+	// 購入履歴更新用メソッド
+	public boolean updatePurchaseHistory(PurchaseHistory purchaseHistory);
+
+	// 購入履歴削除用メソッド
+	public boolean deletePurchaseHistory(int id);
 }
