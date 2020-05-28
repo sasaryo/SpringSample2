@@ -144,6 +144,14 @@
         WHERE user_id = #{userId}
     </select>
 
+    <!-- 購入履歴1件検索 -->
+    <select id="selectOnePurchaseHistory" resultMap="purchaseHistory">
+        SELECT *
+        FROM
+            purchase_history
+        WHERE id = #{id}
+    </select>
+
     <!-- 購入履歴更新 -->
     <update id="updatePurchaseHistory" parameterType="com.example.demo.login.domain.model.PurchaseHistory">
         UPDATE purchase_history

@@ -291,6 +291,89 @@ public class HomeController {
     	return "login/homeLayout";
     }
 
+    // 購入履歴更新画面のGET用メソッド
+    @GetMapping("/userPurchaseHistoryUpdate/{userId:.+}/{id}")
+    public String getUserPurchaseHistoryUpdate(@ModelAttribute PurchaseHistoryForm purchaseHistoryForm,
+    		BindingResult bindingResult, Model model,
+    		@PathVariable("userId")String userId, @PathVariable("id")int id) {
+    	// ユーザーIDとidを確認（デバッグ）
+    	System.out.println("userId = " + userId +", id = " + id);
+
+    	// コンテンツ部分に購入履歴を表示するための文字列を登録
+    	model.addAttribute("contents", "login/userPurchaseUpdate::userPurchaseUpdate_contents");
+
+    	// ModelにユーザーID、idを登録
+    	model.addAttribute("userId", userId);
+    	model.addAttribute("id", id);
+
+    	// 更新対象の行を取得
+    	PurchaseHistory purchaseHistory = userService.selectOnePurchaseHistory(id);
+
+    	purchaseHistoryForm.setId(purchaseHistory.getId());							// id
+    	purchaseHistoryForm.setPurchaseDate(purchaseHistory.getPurchaseDate());		// 購入日
+    	purchaseHistoryForm.setPurchaseItem(purchaseHistory.getPurchaseItem());		// 購入品目
+    	purchaseHistoryForm.setPurchasePrice(purchaseHistory.getPurchasePrice());	// 購入金額
+
+    	model.addAttribute("purchaseHistoryForm", purchaseHistoryForm);
+
+    	return "login/homeLayout";
+    }
+
+    // 購入履歴更新画面のPost用メソッド
+    @PostMapping("/userPurchaseHistoryUpdate/{userId:.+}/{id}")
+    public String postUserPurchaseHistoryUpdate(@ModelAttribute @Validated(GroupOrder.class) PurchaseHistoryForm purchaseHistoryForm,
+    		BindingResult bindingResult, Model model, @PathVariable("userId")String userId, @PathVariable("id")int id) {
+    	// ユーザーIDを確認（デバッグ）
+    	System.out.println("userId = " + userId +", id = " + id);
+
+		// 入力チェックに引っかかった場合、購入履歴更新画面に戻る
+		if (bindingResult.hasErrors()) {
+			// GETリクエスト用のメソッドを呼び出して、ユーザー登録画面に戻ります。
+			return getUserPurchaseHistoryUpdate(purchaseHistoryForm, bindingResult, model,
+					userId, id);
+		}
+
+		PurchaseHistory purchaseHistory = new PurchaseHistory();
+
+		purchaseHistory.setId(purchaseHistoryForm.getId());							// id
+		purchaseHistory.setPurchaseDate(purchaseHistoryForm.getPurchaseDate());		// 購入日
+		purchaseHistory.setPurchaseItem(purchaseHistoryForm.getPurchaseItem());		// 購入品目
+		purchaseHistory.setPurchasePrice(purchaseHistoryForm.getPurchasePrice());	// 購入金額
+
+
+		// 対象の行を更新する。
+		boolean result = userService.updatePurchaseHistory(purchaseHistory);
+
+    	if(result == true) {
+    		model.addAttribute("result", "更新成功");
+    	}
+    	else {
+    		model.addAttribute("result", "更新失敗");
+    	}
+
+    	return getUserPurchaseHistory(model, userId);
+    }
+
+    // 購入履歴画面のGET用メソッド(削除実施)
+    @GetMapping("/userPurchaseHistoryDelete/{userId:.+}/{id}")
+    public String getUserPurchaseHistoryDelete(Model model, @PathVariable("userId")String userId,
+    		@PathVariable("id")int id) {
+    	// ユーザーIDとidを確認（デバッグ）
+    	System.out.println("userId = " + userId +", id = " + id);
+
+    	// 対象の行を削除
+    	boolean result = userService.deletePurchaseHistory(id);
+
+    	if(result == true) {
+    		model.addAttribute("result", "削除成功");
+    	}
+    	else {
+    		model.addAttribute("result", "削除失敗");
+    	}
+
+    	return getUserPurchaseHistory(model, userId);
+    }
+
     // 購入履歴入力画面のGETメソッド
     @GetMapping("/userPurchaseInput/{id:.+}")
     public String getUserPurchaseInput(@ModelAttribute PurchaseHistoryForm purchaseHistoryForm, BindingResult bindingResult, Model model, @PathVariable("id")String userId) {

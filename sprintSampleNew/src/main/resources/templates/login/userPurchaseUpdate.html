@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+    <meta charset="UTF-8"></meta>
+</head>
+<body>
+    <div th:fragment="userPurchaseUpdate_contents">
+        <div class="row">
+            <div class="col-sm-5">
+                <div class="page-header">
+                	<nobr>
+                    	<h1>購入履歴更新  (ユーザID:[[${userId}]])</h1>
+                	</nobr>
+                </div>
+                <form method="post" th:action="@{/userPurchaseHistoryUpdate/__${userId}__/__${id}__}" th:object="${purchaseHistoryForm}">
+                    <table class="table table-bordered table-hover">
+                        <tr>
+                            <!-- 購入日 -->
+                            <th class="active">購入日</th>
+                            <td>
+                                <div class="form-group"
+                                    th:classappend="${#fields.hasErrors('purchaseDate')} ? 'has-error'">
+                                    <input type="text" class="form-control"
+                                        placeholder="yyyy/MM/dd"
+                                        th:field="*{purchaseDate}" />
+                                    <span class="text-danger"
+                                        th:if="${#fields.hasErrors('purchaseDate')}"
+                                        th:errors="*{purchaseDate}">
+                                        purchaseDate error
+                                    </span>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <!-- 購入品目 -->
+                            <th class="active">購入品目</th>
+                            <td>
+                                <div class="form-group"
+                                    th:classappend="${#fields.hasErrors('purchaseItem')} ? 'has-error'">
+                                    <input type="text" class="form-control"
+                                        th:field="*{purchaseItem}" />
+                                    <span class="text-danger"
+                                        th:if="${#fields.hasErrors('purchaseItem')}"
+                                        th:errors="*{purchaseItem}">
+                                        purchaseItem error
+                                    </span>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <!-- 購入金額 -->
+                            <th class="active">購入金額</th>
+                            <td>
+                                <div class="form-group"
+                                    th:classappend="${#fields.hasErrors('purchasePrice')} ? 'has-error'">
+                                    <input type="text" class="form-control"
+                                        th:field="*{purchasePrice}" />
+                                    <span class="text-danger"
+                                        th:if="${#fields.hasErrors('purchasePrice')}"
+                                        th:errors="*{purchasePrice}">
+                                        purchasePrice error
+                                    </span>
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+                    <!-- 更新ボタン -->
+                    <button class="btn btn-primary btn-lg pull-right"
+                        type="submit"
+                        name="update">
+                        更新
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

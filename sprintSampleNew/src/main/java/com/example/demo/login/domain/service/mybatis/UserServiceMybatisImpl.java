@@ -147,6 +147,12 @@ public class UserServiceMybatisImpl implements UserService {
     }
 
     @Override
+	// 購入履歴1件検索用メソッド
+	public PurchaseHistory selectOnePurchaseHistory(int id) {
+    	return userMapper.selectOnePurchaseHistory(id);
+    }
+
+    @Override
     // 購入履歴更新用メソッド
     public boolean updatePurchaseHistory(PurchaseHistory purchaseHistory) {
     	return userMapper.updatePurchaseHistory(purchaseHistory);
